@@ -48,12 +48,12 @@ export default function Product({ product }: ProductProps) {
     <ProductContainer>
       <ImageContainer>
         <Image 
-        src={product.imageUrl} 
-        alt="" 
-        width={520}
-        height={480}
-        priority={true}
-      />
+          src={product.imageUrl} 
+          alt="" 
+          width={520}
+          height={480}
+          priority={true}
+        />
       </ImageContainer>
 
       <ProductDetails>
