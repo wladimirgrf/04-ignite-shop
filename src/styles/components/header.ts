@@ -1,4 +1,4 @@
-import { styled } from "..";
+import { styled } from '..'
 
 export const HeaderContainer = styled('header', {
   padding: '2rem 0',
@@ -8,7 +8,7 @@ export const HeaderContainer = styled('header', {
 
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
 })
 
 export const BagButton = styled('button', {
@@ -33,5 +33,5 @@ export const BagButton = styled('button', {
 
     background: '$green500',
     color: '$white',
-  }
+  },
 })

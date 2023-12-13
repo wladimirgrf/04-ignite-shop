@@ -1,38 +1,38 @@
-import { useState } from "react"
-import { GetStaticProps, GetStaticPaths } from "next"
-import Image from "next/image"
-import Head from "next/head"
-import Stripe from "stripe"
-import axios from "axios"
+import { useState } from 'react'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import Image from 'next/image'
+import Head from 'next/head'
+import Stripe from 'stripe'
+import axios from 'axios'
 
-import { 
-  ImageContainer, 
-  ProductContainer, 
-  ProductDetails 
-} from "@/styles/pages/product"
-import { stripe } from "@/lib/stripe"
-
+import {
+  ImageContainer,
+  ProductContainer,
+  ProductDetails,
+} from '@/styles/pages/product'
+import { stripe } from '@/lib/stripe'
 
 interface ProductProps {
   product: {
-    id: string;
-    name: string;
-    imageUrl: string;
-    price: string;
-    description: string;
-    defaultPriceId: string;
+    id: string
+    name: string
+    imageUrl: string
+    price: string
+    description: string
+    defaultPriceId: string
   }
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false)
 
   async function handleBuyProduct() {
     try {
       setIsCreatingCheckoutSession(true)
 
       const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId
+        priceId: product.defaultPriceId,
       })
 
       const { checkoutUrl } = response.data
@@ -50,12 +50,12 @@ export default function Product({ product }: ProductProps) {
       <Head>
         <title>{product.name} | Ignite Shop</title>
       </Head>
-      
+
       <ProductContainer>
         <ImageContainer>
-          <Image 
-            src={product.imageUrl} 
-            alt="" 
+          <Image
+            src={product.imageUrl}
+            alt=""
             width={520}
             height={480}
             priority={true}
@@ -67,7 +67,10 @@ export default function Product({ product }: ProductProps) {
           <span>{product.price}</span>
           <p>{product.description}</p>
 
-          <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
+          <button
+            disabled={isCreatingCheckoutSession}
+            onClick={handleBuyProduct}
+          >
             Buy
           </button>
         </ProductDetails>
@@ -79,15 +82,17 @@ export default function Product({ product }: ProductProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: 'blocking',
   }
 }
 
-export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ params }) => {
-  const productId = params!.id;
+export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
+  params,
+}) => {
+  const productId = params!.id
 
   const product = await stripe.products.retrieve(productId, {
-    expand: ['default_price']
+    expand: ['default_price'],
   })
 
   const price = product.default_price as Stripe.Price
@@ -103,8 +108,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
           currency: 'USD',
         }).format(price.unit_amount! / 100),
         description: product.description,
-        defaultPriceId: price.id
-      }
+        defaultPriceId: price.id,
+      },
     },
     revalidate: 60 * 60 * 1, // 1 hour
   }

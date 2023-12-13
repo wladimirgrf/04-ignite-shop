@@ -1,18 +1,17 @@
-import { GetServerSideProps } from "next";
-import Link from "next/link";
-import Image from "next/image";
-import Head from "next/head";
-import Stripe from "stripe";
+import { GetServerSideProps } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
+import Head from 'next/head'
+import Stripe from 'stripe'
 
-import { ImageContainer, SuccessContainer } from "@/styles/pages/success";
-import { stripe } from "@/lib/stripe";
-
+import { ImageContainer, SuccessContainer } from '@/styles/pages/success'
+import { stripe } from '@/lib/stripe'
 
 interface SuccessProps {
-  customerName: string;
+  customerName: string
   product: {
-    name: string;
-    imageUrl: string;
+    name: string
+    imageUrl: string
   }
 }
 
@@ -28,9 +27,9 @@ export default function Success({ customerName, product }: SuccessProps) {
         <h1>Purchase made!</h1>
 
         <ImageContainer>
-          <Image         
-            src={product.imageUrl} 
-            alt="" 
+          <Image
+            src={product.imageUrl}
+            alt=""
             width={120}
             height={110}
             priority={true}
@@ -38,31 +37,30 @@ export default function Success({ customerName, product }: SuccessProps) {
         </ImageContainer>
 
         <p>
-          Woohoo <strong>{customerName}</strong>, your <strong>{product.name}</strong> is already on its way to your home.
+          Woohoo <strong>{customerName}</strong>, your{' '}
+          <strong>{product.name}</strong> is already on its way to your home.
         </p>
 
-        <Link href="/">
-          Back to catalog
-        </Link>
+        <Link href="/">Back to catalog</Link>
       </SuccessContainer>
     </>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  if(!query.session_id) {
+  if (!query.session_id) {
     return {
       redirect: {
         destination: '/',
-        permanent: false
-      }
+        permanent: false,
+      },
     }
   }
 
   const sessionId = String(query.session_id)
 
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
-    expand: ['line_items', 'line_items.data.price.product']
+    expand: ['line_items', 'line_items.data.price.product'],
   })
 
   const customerName = session.customer_details?.name
@@ -73,8 +71,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       customerName,
       product: {
         name: product.name,
-        imageUrl: product.images[0]
-      }
-    }
+        imageUrl: product.images[0],
+      },
+    },
   }
 }

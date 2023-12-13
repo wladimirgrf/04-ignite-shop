@@ -1,15 +1,18 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import { stripe } from "@/lib/stripe";
+import { stripe } from '@/lib/stripe'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const { priceId } = req.body
 
-  if(req.method !== 'POST') {
+  if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed.' })
   }
 
-  if(!priceId) {
+  if (!priceId) {
     res.status(400).json({ error: 'Price not found.' })
   }
 
@@ -20,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     success_url: successUrl,
     cancel_url: cancelUrl,
     mode: 'payment',
-    line_items: [{ price: priceId, quantity: 1 }]
+    line_items: [{ price: priceId, quantity: 1 }],
   })
 
   return res.status(201).json({
