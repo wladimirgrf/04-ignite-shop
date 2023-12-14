@@ -17,14 +17,14 @@ export const Content = styled(Dialog.Content, {
     flexDirection: 'column',
 
     h1: {
-      fontSize: '1.25rem',
+      fontSize: '$lg',
       color: '$gray100',
     },
 
     button: {
       border: 0,
       padding: '1.25rem',
-      fontSize: '1.125rem',
+      fontSize: '$md',
       fontWeight: 'bold',
       backgroundColor: '$green500',
       color: '$white',
@@ -91,17 +91,17 @@ export const ItemDetails = styled('div', {
 
   span: {
     color: '$gray300',
-    fontSize: '1.125rem',
+    fontSize: '$md',
   },
 
   strong: {
     color: '$gray100',
-    fontSize: '1.125rem',
+    fontSize: '$md',
   },
 
   a: {
     color: '$green500',
-    fontSize: '1rem',
+    fontSize: '$sm',
     textDecoration: 'none',
     fontWeight: 'bold',
 
@@ -123,12 +123,12 @@ export const CheckoutQuantity = styled('div', {
   justifyContent: 'space-between',
 
   span: {
-    fontSize: '1rem',
+    fontSize: '$sm',
     color: '$gray100',
   },
 
   strong: {
-    fontSize: '1.125rem',
+    fontSize: '$md',
     fontWeight: 'normal',
     color: '$gray300',
   },
@@ -140,13 +140,13 @@ export const CheckoutTotal = styled('div', {
   justifyContent: 'space-between',
 
   span: {
-    fontSize: '1.125rem',
+    fontSize: '$md',
     fontWeight: 'bold',
     color: '$gray100',
   },
 
   strong: {
-    fontSize: '1.5rem',
+    fontSize: '$xl',
     color: '$gray100',
   },
 })

@@ -71,7 +71,7 @@ export default function Product({ product }: ProductProps) {
             disabled={isCreatingCheckoutSession}
             onClick={handleBuyProduct}
           >
-            Buy
+            Put in Bag
           </button>
         </ProductDetails>
       </ProductContainer>

@@ -6,8 +6,14 @@ import Link from 'next/link'
 import Head from 'next/head'
 import Stripe from 'stripe'
 import { useKeenSlider } from 'keen-slider/react'
+import { Handbag } from '@phosphor-icons/react'
 
-import { HomeContainer, Product } from '@/styles/pages/home'
+import {
+  BagBox,
+  HomeContainer,
+  Product,
+  ProductDetails,
+} from '@/styles/pages/home'
 import { stripe } from '@/lib/stripe'
 
 interface HomeProps {
@@ -50,8 +56,14 @@ export default function Home({ products }: HomeProps) {
               />
 
               <footer>
-                <strong>{product.name}</strong>
-                <span>{product.price}</span>
+                <ProductDetails>
+                  <strong>{product.name}</strong>
+                  <span>{product.price}</span>
+                </ProductDetails>
+
+                <BagBox>
+                  <Handbag size={32} weight="bold" />
+                </BagBox>
               </footer>
             </Product>
           </Link>

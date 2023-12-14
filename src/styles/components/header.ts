@@ -27,7 +27,7 @@ export const BagButton = styled('button', {
     marginTop: '-0.875rem',
 
     padding: '0.125rem 0.375rem',
-    fontSize: '0.875rem',
+    fontSize: '$xs',
     fontWeight: 'bold',
     borderRadius: '50%',
 
