@@ -15,22 +15,22 @@ import {
   ProductDetails,
 } from '@/styles/pages/home'
 import { stripe } from '@/lib/stripe'
+import { priceFormatter } from '@/utils/formatter'
+
+interface ProductProps {
+  id: string
+  name: string
+  imageUrl: string
+  price: string
+}
 
 interface HomeProps {
-  products: {
-    id: string
-    name: string
-    imageUrl: string
-    price: string
-  }[]
+  products: ProductProps[]
 }
 
 export default function Home({ products }: HomeProps) {
   const [sliderRef] = useKeenSlider({
-    slides: {
-      perView: 3,
-      spacing: 48,
-    },
+    slides: { perView: 3, spacing: 48 },
   })
 
   return (
@@ -78,24 +78,23 @@ export const getStaticProps: GetStaticProps = async () => {
     expand: ['data.default_price'],
   })
 
-  const products = response.data.map((product) => {
+  const products: ProductProps[] = []
+
+  response.data.forEach((product) => {
     const price = product.default_price as Stripe.Price
 
-    return {
-      id: product.id,
-      name: product.name,
-      imageUrl: product.images[0],
-      price: new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(price.unit_amount! / 100),
+    if (price && price.unit_amount) {
+      products.push({
+        id: product.id,
+        name: product.name,
+        imageUrl: product.images[0],
+        price: priceFormatter.format(price.unit_amount / 100),
+      })
     }
   })
 
   return {
-    props: {
-      products,
-    },
+    props: { products },
     revalidate: 60 * 60 * 2, // 2 hours
   }
 }

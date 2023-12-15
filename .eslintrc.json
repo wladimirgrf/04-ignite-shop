@@ -1,4 +1,7 @@
 {
   "extends": "@rocketseat/eslint-config/react",
-  "ignorePatterns": ["_document.tsx"]
+  "ignorePatterns": ["_document.tsx"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }
