@@ -10,6 +10,7 @@ export const Content = styled(Dialog.Content, {
   width: '30rem',
   height: '100vh',
   backgroundColor: '$gray800',
+  pointerEvents: 'none',
 
   form: {
     padding: '3rem',
@@ -19,25 +20,6 @@ export const Content = styled(Dialog.Content, {
     h1: {
       fontSize: '$lg',
       color: '$gray100',
-    },
-
-    button: {
-      border: 0,
-      padding: '1.25rem',
-      fontSize: '$md',
-      fontWeight: 'bold',
-      backgroundColor: '$green500',
-      color: '$white',
-      borderRadius: 8,
-      cursor: 'pointer',
-      position: 'absolute',
-      left: '3rem',
-      right: '3rem',
-      bottom: '3rem',
-
-      '&:hover': {
-        backgroundColor: '$green300',
-      },
     },
   },
 })
@@ -52,6 +34,7 @@ export const CloseButton = styled(Dialog.Close, {
   border: 0,
   lineHeight: 0,
   zIndex: 99,
+  pointerEvents: 'auto',
 })
 
 export const ItemsList = styled('div', {
@@ -80,6 +63,8 @@ export const ThumbnailContainer = styled('div', {
 
   img: {
     objectFit: 'cover',
+    width: '100%',
+    height: 'auto',
   },
 })
 
@@ -99,11 +84,15 @@ export const ItemDetails = styled('div', {
     fontSize: '$md',
   },
 
-  a: {
+  button: {
+    display: 'flex',
     color: '$green500',
     fontSize: '$sm',
     textDecoration: 'none',
     fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    border: 0,
+    cursor: 'pointer',
 
     '&:hover': {
       color: '$green300',
@@ -148,5 +137,24 @@ export const CheckoutTotal = styled('div', {
   strong: {
     fontSize: '$xl',
     color: '$gray100',
+  },
+})
+
+export const CheckoutButton = styled('button', {
+  border: 0,
+  padding: '1.25rem',
+  fontSize: '$md',
+  fontWeight: 'bold',
+  backgroundColor: '$green500',
+  color: '$white',
+  borderRadius: 8,
+  cursor: 'pointer',
+  position: 'absolute',
+  left: '3rem',
+  right: '3rem',
+  bottom: '3rem',
+
+  '&:hover': {
+    backgroundColor: '$green300',
   },
 })

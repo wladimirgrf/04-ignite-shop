@@ -13,12 +13,23 @@ export const HeaderContainer = styled('header', {
 
 export const BagButton = styled('button', {
   border: 0,
-  cursor: 'pointer',
   padding: '0.75rem',
   borderRadius: 6,
 
   backgroundColor: '$gray800',
-  color: '$gray500',
+
+  variants: {
+    cart: {
+      withItems: {
+        color: '$gray300',
+        cursor: 'pointer',
+      },
+      noItems: {
+        color: '$gray500',
+        cursor: 'regular',
+      },
+    },
+  },
 
   span: {
     display: 'flex',

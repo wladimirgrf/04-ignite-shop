@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Head from 'next/head'
 import Stripe from 'stripe'
 import axios from 'axios'
+import { useShoppingCart } from 'use-shopping-cart'
 
 import {
   ImageContainer,
@@ -17,9 +18,10 @@ interface ProductProps {
   id: string
   name: string
   imageUrl: string
-  price: string
+  price: number
   description: string
   defaultPriceId: string
+  formattedPrice: string
 }
 
 export default function Product(product: ProductProps) {
@@ -27,23 +29,37 @@ export default function Product(product: ProductProps) {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false)
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true)
+  const { addItem, clearCart } = useShoppingCart()
 
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
-      })
-
-      const { checkoutUrl } = response.data
-
-      window.location.href = checkoutUrl
-    } catch (error) {
-      setIsCreatingCheckoutSession(false)
-
-      alert('Failed to redirect to checkout page!')
-    }
+  function handleAddToBag() {
+    clearCart()
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.imageUrl,
+      currency: 'USD',
+      description: product.description,
+    })
   }
+
+  // async function handleBuyProduct() {
+  //   try {
+  //     setIsCreatingCheckoutSession(true)
+
+  //     const response = await axios.post('/api/checkout', {
+  //       priceId: product.defaultPriceId,
+  //     })
+
+  //     const { checkoutUrl } = response.data
+
+  //     window.location.href = checkoutUrl
+  //   } catch (error) {
+  //     setIsCreatingCheckoutSession(false)
+
+  //     alert('Failed to redirect to checkout page!')
+  //   }
+  // }
 
   return (
     <>
@@ -64,13 +80,10 @@ export default function Product(product: ProductProps) {
 
         <ProductDetails>
           <h1>{product.name}</h1>
-          <span>{product.price}</span>
+          <span>{product.formattedPrice}</span>
           <p>{product.description}</p>
 
-          <button
-            disabled={isCreatingCheckoutSession}
-            onClick={handleBuyProduct}
-          >
+          <button disabled={isCreatingCheckoutSession} onClick={handleAddToBag}>
             Put in Bag
           </button>
         </ProductDetails>
@@ -109,9 +122,10 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
     id: stripeProduct.id,
     name: stripeProduct.name,
     imageUrl: stripeProduct.images[0],
-    price: priceFormatter.format(price.unit_amount / 100),
+    price: price.unit_amount,
     description: String(stripeProduct.description),
     defaultPriceId: price.id,
+    formattedPrice: priceFormatter.format(price.unit_amount / 100),
   }
 
   return {
