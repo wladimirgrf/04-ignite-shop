@@ -1,3 +1,4 @@
+import { useEffect, useState, useCallback } from 'react'
 import { Handbag } from '@phosphor-icons/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,15 +9,26 @@ import logoimg from '../assets/logo.svg'
 
 import { BagButton, HeaderContainer } from '@/styles/components/header'
 import { Bag } from './Bag'
-import { useEffect, useState } from 'react'
 
 export function Header() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [cartHasItems, setCartHasItems] = useState(false)
   const { cartCount } = useShoppingCart()
+
+  const handleOpenDialog = useCallback(() => {
+    if (cartCount && cartCount > 0) {
+      setIsDialogOpen((state) => !state)
+    } else {
+      setIsDialogOpen(false)
+    }
+  }, [cartCount])
 
   useEffect(() => {
     if (cartCount && cartCount > 0) {
       setCartHasItems(true)
+    } else {
+      setCartHasItems(false)
+      setIsDialogOpen(false)
     }
   }, [cartCount])
 
@@ -26,7 +38,7 @@ export function Header() {
         <Image src={logoimg} alt="" />
       </Link>
 
-      <Dialog.Root>
+      <Dialog.Root open={isDialogOpen} onOpenChange={handleOpenDialog}>
         <Dialog.Trigger asChild>
           <BagButton cart={cartHasItems ? 'withItems' : 'noItems'}>
             {cartHasItems && <span>{cartCount}</span>}

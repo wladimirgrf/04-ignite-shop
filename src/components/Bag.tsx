@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, FormEvent } from 'react'
 import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from '@phosphor-icons/react'
@@ -19,15 +19,36 @@ import {
 } from '@/styles/components/bag'
 
 export function Bag() {
-  const { cartDetails, cartCount, formattedTotalPrice, removeItem } =
-    useShoppingCart()
+  const {
+    cartDetails,
+    cartCount,
+    formattedTotalPrice,
+    removeItem,
+    redirectToCheckout,
+  } = useShoppingCart()
+
   const [items, setItems] = useState<[string, CartEntry][]>([])
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false)
 
   useEffect(() => {
     if (cartDetails) {
       setItems(Object.entries(cartDetails))
     }
   }, [cartDetails])
+
+  async function handleCheckout(event: FormEvent) {
+    event.preventDefault()
+
+    setIsCreatingCheckoutSession(true)
+
+    try {
+      await redirectToCheckout()
+    } catch (error) {
+      console.error(error)
+      setIsCreatingCheckoutSession(false)
+    }
+  }
 
   return (
     <Dialog.Portal>
@@ -36,7 +57,7 @@ export function Bag() {
       </CloseButton>
 
       <Content>
-        <form>
+        <form onSubmit={handleCheckout}>
           <h1>Shopping Bag</h1>
           <ItemsList>
             {items.map(([key, product]) => (
@@ -55,6 +76,7 @@ export function Bag() {
                   <span>{product.name}</span>
                   <strong>{product.formattedValue}</strong>
                   <button
+                    type="button"
                     onClick={() => {
                       removeItem(product.id)
                     }}
@@ -75,7 +97,9 @@ export function Bag() {
               <strong>{formattedTotalPrice}</strong>
             </CheckoutTotal>
           </CheckoutSummary>
-          <CheckoutButton>Checkout</CheckoutButton>
+          <CheckoutButton disabled={isCreatingCheckoutSession} type="submit">
+            Checkout
+          </CheckoutButton>
         </form>
       </Content>
     </Dialog.Portal>

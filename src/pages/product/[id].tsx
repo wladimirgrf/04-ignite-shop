@@ -1,9 +1,7 @@
-import { useState } from 'react'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Image from 'next/image'
 import Head from 'next/head'
 import Stripe from 'stripe'
-import axios from 'axios'
 import { useShoppingCart } from 'use-shopping-cart'
 
 import {
@@ -26,40 +24,19 @@ interface ProductProps {
 
 export default function Product(product: ProductProps) {
   const title = `${product.name} | Ignite Shop`
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false)
 
-  const { addItem, clearCart } = useShoppingCart()
+  const { addItem } = useShoppingCart()
 
   function handleAddToBag() {
-    clearCart()
     addItem({
-      id: product.id,
       name: product.name,
       price: product.price,
       image: product.imageUrl,
       currency: 'USD',
       description: product.description,
+      price_id: product.defaultPriceId,
     })
   }
-
-  // async function handleBuyProduct() {
-  //   try {
-  //     setIsCreatingCheckoutSession(true)
-
-  //     const response = await axios.post('/api/checkout', {
-  //       priceId: product.defaultPriceId,
-  //     })
-
-  //     const { checkoutUrl } = response.data
-
-  //     window.location.href = checkoutUrl
-  //   } catch (error) {
-  //     setIsCreatingCheckoutSession(false)
-
-  //     alert('Failed to redirect to checkout page!')
-  //   }
-  // }
 
   return (
     <>
@@ -83,9 +60,7 @@ export default function Product(product: ProductProps) {
           <span>{product.formattedPrice}</span>
           <p>{product.description}</p>
 
-          <button disabled={isCreatingCheckoutSession} onClick={handleAddToBag}>
-            Put in Bag
-          </button>
+          <button onClick={handleAddToBag}>Put in Bag</button>
         </ProductDetails>
       </ProductContainer>
     </>

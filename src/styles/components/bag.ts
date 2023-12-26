@@ -13,6 +13,7 @@ export const Content = styled(Dialog.Content, {
   pointerEvents: 'none',
 
   form: {
+    pointerEvents: 'auto',
     padding: '3rem',
     display: 'flex',
     flexDirection: 'column',
@@ -154,7 +155,11 @@ export const CheckoutButton = styled('button', {
   right: '3rem',
   bottom: '3rem',
 
-  '&:hover': {
+  '&:not(:disabled):hover': {
     backgroundColor: '$green300',
+  },
+
+  '&:disabled': {
+    cursor: 'not-allowed',
   },
 })

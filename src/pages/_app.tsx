@@ -7,18 +7,18 @@ import { Header } from '@/components/Header'
 
 globalStyles()
 
-const stripeKey = String(process.env.STRIPE_PUBLIC_KEY)
-const nextUrl = String(process.env.NEXT_URL)
-
 export default function App({ Component, pageProps }: AppProps) {
+  const stripeKey = String(process.env.NEXT_PUBLIC_STRIPE_KEY)
+  const appUrl = process.env.NEXT_PUBLIC_URL
+
   return (
     <CartProvider
       mode="payment"
       cartMode="client-only"
       currency="USD"
       stripe={stripeKey}
-      successUrl={`${nextUrl}/success`}
-      cancelUrl={`${nextUrl}/`}
+      successUrl={`${appUrl}/success`}
+      cancelUrl={`${appUrl}/`}
       shouldPersist
     >
       <Container>
