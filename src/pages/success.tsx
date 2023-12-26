@@ -3,19 +3,35 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import Stripe from 'stripe'
+import { useShoppingCart } from 'use-shopping-cart'
 
-import { ImageContainer, SuccessContainer } from '@/styles/pages/success'
+import {
+  ImagesContainer,
+  ImageBox,
+  SuccessContainer,
+} from '@/styles/pages/success'
 import { stripe } from '@/lib/stripe'
+import { useEffect } from 'react'
 
 interface SuccessProps {
   customerName: string
-  product: {
-    name: string
-    imageUrl: string
-  }
+  numberOfProducts: number
+  images: string[]
 }
 
-export default function Success({ customerName, product }: SuccessProps) {
+export default function Success({
+  customerName,
+  numberOfProducts,
+  images,
+}: SuccessProps) {
+  const { cartCount, clearCart } = useShoppingCart()
+
+  useEffect(() => {
+    if (cartCount && cartCount > 0) {
+      clearCart()
+    }
+  }, [clearCart, cartCount])
+
   return (
     <>
       <Head>
@@ -26,19 +42,24 @@ export default function Success({ customerName, product }: SuccessProps) {
       <SuccessContainer>
         <h1>Purchase made!</h1>
 
-        <ImageContainer>
-          <Image
-            src={product.imageUrl}
-            alt=""
-            width={120}
-            height={110}
-            priority={true}
-          />
-        </ImageContainer>
+        <ImagesContainer>
+          {images.map((imageUrl) => (
+            <ImageBox key={imageUrl}>
+              <Image
+                src={imageUrl}
+                alt=""
+                width={120}
+                height={110}
+                priority={true}
+              />
+            </ImageBox>
+          ))}
+        </ImagesContainer>
 
         <p>
-          Woohoo <strong>{customerName}</strong>, your{' '}
-          <strong>{product.name}</strong> is already on its way to your home.
+          Woohoo <strong>{customerName}</strong>, your purchase of{' '}
+          {numberOfProducts} {numberOfProducts > 1 ? 't-shirts' : 't-shirt'} is
+          already on its way to your home.
         </p>
 
         <Link href="/">Back to catalog</Link>
@@ -64,15 +85,17 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   })
 
   const customerName = session.customer_details?.name
-  const product = session.line_items?.data[0].price?.product as Stripe.Product
+  const numberOfProducts = session.line_items?.data.length
+  const images = session.line_items?.data.map((item) => {
+    const product = item.price?.product as Stripe.Product
+    return product.images[0]
+  })
 
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0],
-      },
+      numberOfProducts,
+      images,
     },
   }
 }

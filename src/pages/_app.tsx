@@ -17,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
       cartMode="client-only"
       currency="USD"
       stripe={stripeKey}
-      successUrl={`${appUrl}/success`}
+      successUrl={`${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`}
       cancelUrl={`${appUrl}/`}
       shouldPersist
     >
